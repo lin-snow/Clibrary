@@ -7,7 +7,9 @@ int main() {
 
     int isPrime(int n); // 函数原型
 
-    int x = scanf("%d", &x); // 输入待判断的数
+    printf("Please input a number: ");
+    int x = 0;
+    scanf("%d", &x); // 输入待判断的数
 
     if (isPrime(x)) {
         printf("%d is Prime!\n", x);
