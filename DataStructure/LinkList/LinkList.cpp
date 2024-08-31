@@ -38,7 +38,6 @@ int main() {
     void InsertBiNode(LinkList* LinkList, Node* newNode); // 双向链表结点插入函数
     void FreeLinkList(LinkList* LinkListToFree); // 释放链表函数
     void oeswap(LinkList* LinkList); // 单向链表奇偶调换
-    Node* FindMidNode(LinkList* LinkList); // 找到链表的中间结点
     Node* GetNode(LinkList* LinkList, Index nodeIndex); // 获取某个位置的结点 
     Index Where(LinkList* LinkList, Node* node2find); // 查找结点在链表中的位置
 
@@ -77,10 +76,37 @@ _Bool isLinkListEmpty(LinkList* LinkList) {
     }
 }
 
+// 判断链表是否成环(快慢指针法)
+_Bool isLoop(LinkList* LinkList) {
+    if(isLinkListEmpty(LinkList)) {
+        perror("The LinkList is empty!\n");
+        return false;
+    }
+
+    if (LinkList->LinkList_Size == 1) {
+        perror("No Loop!\n");
+        return false;
+    }
+
+    Node* SlowPTR = LinkList->Head; // 慢指针
+    Node* FastPTR = LinkList->Head->next; // 快指针
+
+    while(SlowPTR != NULL && FastPTR != NULL && FastPTR->next != NULL) {
+        if (SlowPTR == FastPTR) {
+            return true;
+        } else {
+            SlowPTR = SlowPTR->next;
+            FastPTR = FastPTR->next->next;
+        }
+    }
+
+    return false;
+}
+
 // 获取某个位置的结点
 Node* GetNode(LinkList* LinkList, Index nodeIndex) {
     if(isLinkListEmpty(LinkList)) {
-        perror("The LinkList is empty!");
+        perror("The LinkList is empty!\n");
         return NULL;
     }
 
@@ -116,6 +142,24 @@ Index Where(LinkList* LinkList, Node* node2find) {
     } while(nodeIndex++);
 } 
 
+// 释放链表函数
+void FreeLinkList(LinkList* LinkListToFree) {
+    if(isLinkListEmpty(LinkListToFree)) {
+        printf("There is no nodes in the LinkList!\n");
+        return;
+    } else {
+        Node* FreePTR = LinkListToFree->Head;
+        while(FreePTR != NULL) {
+            Node* TempPTR = FreePTR->next;
+            free(FreePTR);
+            FreePTR = NULL;
+            FreePTR = TempPTR;
+        }
+    }
+    free(LinkListToFree);
+    LinkListToFree = NULL;
+}
+
 // 单向链表插入结点
 void InsertUniNode(LinkList* LinkList, Node* newNode) {
     if (isLinkListEmpty(LinkList)) { 
@@ -126,6 +170,7 @@ void InsertUniNode(LinkList* LinkList, Node* newNode) {
         return;
     } else {
         /* 链表不为空，插入到末尾 */
+        LinkList->Tail->next = newNode;
         LinkList->Tail = newNode;
         LinkList->LinkList_Size++;
         return;
@@ -149,8 +194,63 @@ void AppendUniNode(LinkList* LinkList) {
 
 // 双向链表结点插入
 void InsertBiNode(LinkList* LinkList, Node* newNode) {
-    
+    if(isLinkListEmpty(LinkList)) {
+        /* 链表为空 */
+        LinkList->Head = newNode;
+        LinkList->Tail = newNode;
+        LinkList->LinkList_Size++;
+    } else {
+        /* 链表不为空，插入到末尾 */
+        newNode->prev = LinkList->Tail;
+        LinkList->Tail->next = newNode;
+        LinkList->Tail = newNode;
+        LinkList->LinkList_Size++;
+    }
 }
+
+// 双向链表结点创建函数
+void AppendBiNode(LinkList* LinkList) {
+    Node* newNode = (Node*)malloc(sizeof(Node)); // 给结点创建一个内存空间
+    if(newNode == NULL) {
+        perror("Creating new node failed!\n");
+        return;
+    }
+
+    InitNode(newNode); // 初始化结点
+
+    InsertBiNode(LinkList, newNode);
+
+    return;
+}
+
+// 单向链表奇偶调换
+// void oeswap(LinkList* LinkList) {
+//     // 判断链表是否为空或者是否只有一个结点
+//     if(isLinkListEmpty(LinkList) || LinkList->LinkList_Size == 1) {
+//         printf("Do not need to Swap!\n");
+//         system("pause");
+//         return;
+//     }
+
+//     Node* OddPTR = LinkList->Head; // 奇数指针
+//     Node* EvenPTR = LinkList->Head->next; // 偶数指针
+//     Node* TempPTR = NULL;
+
+//     while(true) {
+//         if(LinkList->Head == OddPTR) {
+//             LinkList->Head = EvenPTR;
+//             OddPTR->next = EvenPTR->next;
+//             EvenPTR->next = OddPTR;
+//             TempPTR = OddPTR;
+
+//             // 将奇偶指针指向下一组
+            
+//         } else {
+
+//         }
+//     }
+// }
+
 
 
 
