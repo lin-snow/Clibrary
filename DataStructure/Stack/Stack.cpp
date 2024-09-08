@@ -40,4 +40,13 @@ int main() {
 Status InitStack_Sq(SqStack &S, int size, int inc) {
     S.elem = (ElemType *)malloc(size * sizeof(ElemType)); // 分配存储空间
     if (S.elem == NULL) return OVERFLOW;
+    S.top = 0; // 置S为空栈
+    S.size = size; // 初始容量值
+    S.increment = inc; // 初始增量值
+    return OK;
+}
+
+Status DestroyStack_Sq(SqStack &S) {
+    ElemType * newBase;
+    if (S.top > = S.size) 
 }
