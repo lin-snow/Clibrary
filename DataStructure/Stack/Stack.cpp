@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 typedef enum Status{
-    Ok = 1,
+    OK = 1,
     TRUE = 1,
     ERROR = 0,
     FALSE = 0,
@@ -46,7 +46,15 @@ Status InitStack_Sq(SqStack &S, int size, int inc) {
     return OK;
 }
 
-Status DestroyStack_Sq(SqStack &S) {
+Status Push_Sq(SqStack &S, ElemType e) {
     ElemType * newBase;
-    if (S.top > = S.size) 
+    if (S.top >= S.size) { // 若栈顶位标已经达到了所分配的容量，则栈满，扩容
+        newBase = (ElemType *)realloc(S.elem, (S.size + S.increment) * sizeof(ElemType));
+        if (newBase == NULL) return OVERFLOW;
+        S.elem = newBase;
+        S.size += S.increment;
+    } 
+
+    S.elem[S.top++] = e; // 入栈
+    return OK;
 }
