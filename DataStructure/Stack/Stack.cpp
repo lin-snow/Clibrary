@@ -46,6 +46,23 @@ Status InitStack_Sq(SqStack &S, int size, int inc) {
     return OK;
 }
 
+Status StackEmpty_Sq(SqStack S) {
+    if (S.top < 0) return ERROR;
+    else if (S.top == 0) return TRUE;
+    else return FALSE;
+}
+
+void ClearStack_Sq(SqStack &S) {
+    // 逻辑清空
+    S.top = 0;
+}
+
+Status DestroyStack_Sq(SqStack &S) {
+    free(S.elem);
+    S.elem = NULL;
+    return OK;
+}
+
 Status Push_Sq(SqStack &S, ElemType e) {
     ElemType * newBase;
     if (S.top >= S.size) { // 若栈顶位标已经达到了所分配的容量，则栈满，扩容
@@ -56,5 +73,19 @@ Status Push_Sq(SqStack &S, ElemType e) {
     } 
 
     S.elem[S.top++] = e; // 入栈
+    return OK;
+}
+
+Status Pop_Sq(SqStack &S, ElemType &e) {
+    if (StackEmpty_Sq(S)) return OVERFLOW;
+
+    e = S.elem[--S.top];
+    return OK;
+}
+
+Status GetTop_Sq(SqStack S, ElemType &e) {
+    if (StackEmpty_Sq(S)) return OVERFLOW;
+
+    e = S.elem[S.top - 1];
     return OK;
 }
