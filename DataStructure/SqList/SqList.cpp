@@ -36,6 +36,7 @@ int main()
     Status PutElem_Sq(SqList & L, int i, ElemType e);             // 将顺序表L中的第i个元素赋值为e
     Status Append_Sq(SqList & L, ElemType e);                     // 在顺序表L表尾添加元素e
     Status DeleteLast_Sq(SqList & L, ElemType & e);               // 删除顺序表L的表尾元素，并用参数e返回其值
+    void MergeList_Sq(SqList La, SqList Lb, SqList &Lc);          // 有序顺序表的归并
 
     system("pause");
     return 0;
@@ -126,4 +127,15 @@ Status DeleteLast_Sq(SqList &L, ElemType &e) {
     e = L.elem[L.length - 1];
     --L.length;
     return OK; 
+}
+
+void MergeList_Sq(SqList La, SqList Lb, SqList &Lc) {
+    // 已知有序顺序表La和Lb中的数据元素按值非递减排列
+    // 归并La和Lb得到的新的有序顺序表Lc, Lc的数据元素也按值非递减排列
+
+    int i = 0, j = 0,size,increment = 10;
+    ElemType ai, bj;
+    size = La.length + Lb.length;
+    InitList_Sq(Lc, size, increment); // 创建空表Lc
+    
 }
