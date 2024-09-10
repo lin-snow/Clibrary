@@ -137,5 +137,7 @@ void MergeList_Sq(SqList La, SqList Lb, SqList &Lc) {
     ElemType ai, bj;
     size = La.length + Lb.length;
     InitList_Sq(Lc, size, increment); // 创建空表Lc
-    
+    while (i < La.length && i < Lb.length) { // 表La和表Lb均为非空
+        GetElem_Sq(La, i, ai); // 取La的第i个元素
+    }
 }
