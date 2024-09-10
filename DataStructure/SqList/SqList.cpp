@@ -139,5 +139,19 @@ void MergeList_Sq(SqList La, SqList Lb, SqList &Lc) {
     InitList_Sq(Lc, size, increment); // 创建空表Lc
     while (i < La.length && i < Lb.length) { // 表La和表Lb均为非空
         GetElem_Sq(La, i, ai); // 取La的第i个元素
+        GetElem_Sq(Lb, j, bj); // 取Lb的第i个元素
+        if (ai < bj) { // ai较小或相等时取ai
+            Append_Sq(Lc, ai); // 将ai添加到Lc中
+            ++i; // 指向La的下一项
+        } else { // bj较小
+            Append_Sq(Lc, bj);
+            ++j;
+        }
+    }
+    while (i < La.length) { // 表La非空且表Lb已空
+        GetElem_Sq(La, i++, ai); Append_Sq(Lc, ai);
+    }
+    while (j < Lb.length) { // 表Lb非空且表La已空
+        GetElem_Sq(Lb, j++, bj); Append_Sq(Lc, bj);
     }
 }
