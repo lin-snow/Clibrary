@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/L1nSn0w/Desktop/CLibrary/Algorithms/Sort/ImprovedBubble_Sort",
-      "program": "c:/Users/L1nSn0w/Desktop/CLibrary/Algorithms/Sort/ImprovedBubble_Sort/build/Debug/outDebug",
+      "cwd": "c:/Users/L1nSn0w/Desktop/CLibrary/Algorithms/Sort/Insert_Sort",
+      "program": "c:/Users/L1nSn0w/Desktop/CLibrary/Algorithms/Sort/Insert_Sort/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
