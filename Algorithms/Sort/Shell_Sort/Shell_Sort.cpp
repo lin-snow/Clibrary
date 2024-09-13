@@ -8,15 +8,16 @@ typedef struct {
     // ... 其他数据项
 } RecordType, RcdType;
 
+
 typedef struct {
     RcdType * rcd; // 存储空间基址
     int length; // 当前长度
     int size; // 存储容量
 } RcdSqList; // 记录的顺序表
 
+
 int main() {
     system("cls");
-
     
     void ShellSort(RcdSqList &L);
 
@@ -40,3 +41,5 @@ void ShellSort(RcdSqList &L) {
         }
     } while (increment > 1); // 增量不为1时执行循环
 }
+
+
