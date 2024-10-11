@@ -7,11 +7,9 @@ class illegalParameterValue {
     public:
         illegalParameterValue(): // 默认构造函数
             message("Illegal parameter value") {}
-        illegalParameterValue(char * theMessage) { // 带参数的构造函数
-            message = theMessage;
-        } 
+        illegalParameterValue(char * theMessage): message(theMessage) {} // 带参数的构造函数
 
-        void outputMessage() { //
+        void outputMessage() { 
             std::cout << message << std::endl;
         }
     private:
