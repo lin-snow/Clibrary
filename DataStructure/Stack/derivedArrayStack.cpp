@@ -26,7 +26,7 @@ class derivedArrayStack : private arrayList<T>, public stack<T> {
             }
         }
         void pop() {
-            if (arrayList<T>::empty)
+            if (arrayList<T>::empty())
                 throw stackEmpty();
             erase(arrayList<T>::size() - 1);
         }
