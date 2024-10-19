@@ -14,7 +14,7 @@ int main() {
     system("cls"); // 清屏
     SetConsoleOutputCP(65001); // 设置控制台输出为UTF-8编码 (默认g++编译时使用)
      
-    system("mode con cols=400 lines=70"); // 设置控制台窗口大小
+    // system("mode con cols=400 lines=70"); // 设置控制台窗口大小
 
     // 创建一个有向加权图用于测试， 无边的标志为-DBL_MAX， 顶点数据类型为std::string， 边权重数据类型为float
     float noEdge = -DBL_MAX; 
@@ -188,19 +188,27 @@ int main() {
     std::cout << " 查找路径中..." << std::endl;
     ProgressBar(); // 更新进度条
     std::cout << " 查找完毕" << std::endl;
-    std::cout << " 从顶点 1 到 4 的路径为: " << std::endl;
-    int* path = g.findPath(1, 4);
+    int theSource = 1, theDestination = 4;
+    std::cout << " 从顶点 " << theSource << "到" << theDestination << " 的路径为: " << std::endl;
+    int* path = g.findPath(theSource, theDestination);
     if (path != nullptr) {
         std::cout << " 路径的长度为: " << path[0] << std::endl;
         std::cout << " 路径为: ";
         for (int i = 1; i <= path[0]; i++) {
             std::cout << path[i] << " -> ";
         }
-        std::cout << std::endl;
+        std::cout << theDestination <<std::endl;
     } else {
         std::cout << " 不存在这样的路径 " << std::endl;
     }
     std::cout << " -----------------------------------------------------------------------------------" << std::endl << std::endl;
+
+    // 测试清空图
+    std::cout << "                                 <- 清空图  ->                                " << std::endl;
+    std::cout << " 清空图中 ... " << std::endl;
+    g.clear();
+    ProgressBar(); // 更新进度条
+    std::cout << " 清空完毕" << std::endl;
 
     std::cout << "|---------------------------------- 图数据结构的测试结束 ( 结束 ) ---------------------------------|" << std::endl;
 

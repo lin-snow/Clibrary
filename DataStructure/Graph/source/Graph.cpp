@@ -28,9 +28,7 @@ WDGraph<DataType, WeightType>::WDGraph(WeightType theNoEdge) {
 // 析构函数
 template <typename DataType, typename WeightType>
 WDGraph<DataType, WeightType>::~WDGraph() {
-    delete[] vertexList; // 删除顶点列表
-    delete[] edgeList; // 删除边列表
-    delete[] a; // 删除邻接矩阵
+
 }
 
 // 是否存在顶点
@@ -344,6 +342,33 @@ void WDGraph<DataType, WeightType>::printGraph() {
     }
 
     return; 
+}
+
+// 清空图
+template <typename DataType, typename WeightType>
+void WDGraph<DataType, WeightType>::clear() {
+    if (vertexList != nullptr) {
+        vertexList->~arrayList();
+    }
+
+    if (edgeList != nullptr) {
+        edgeList->~arrayList();
+    }
+
+    if (a != nullptr) {
+        deleteAdjacencyMatrix();
+    }
+
+    if (adjacencyTable != nullptr) {
+        deleteAdjacencyTable();
+    }
+
+    if (xList != nullptr) {
+        deleteCrossList();
+    }
+
+    n = 0;
+    e = 0;
 }
 
 //----------------------------------其他方法--------------------------------------
@@ -693,7 +718,7 @@ void WDGraph<DataType, WeightType>::deleteAdjacencyTable() {
     }
 
     adjacencyTable = nullptr;
-    std::cout << "Delete adjacency table!" << std::endl;
+    // std::cout << "Delete adjacency table!" << std::endl;
 }
 
 // 打印邻接表
@@ -801,7 +826,7 @@ void WDGraph<DataType, WeightType>::deleteCrossList() {
     }
 
     xList = nullptr;
-    std::cout << "Delete cross list!" << std::endl;
+    // std::cout << "Delete cross list!" << std::endl;
 }
 
 // 打印十字链表

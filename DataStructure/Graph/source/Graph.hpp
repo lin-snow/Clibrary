@@ -142,6 +142,7 @@ class WDGraph : public graph<DataType, WeightType> {
         void setVertex(int v, DataType theData); // 设置顶点的数据
         WeightType getWeight(int v1, int v2) const; // 返回边的权重
         void setWeight(int v1, int v2, WeightType theWeight); // 设置边的权重
+        void clear(); // 清空图
 
         // 边列表存储结构
         void printEdgeList() const; // 打印边列表
