@@ -35,9 +35,7 @@ WDGraph<DataType, WeightType>::~WDGraph() {
 template <typename DataType, typename WeightType>
 bool WDGraph<DataType, WeightType>::existsVertex(int v) const {
     if (v < 0 || v >= n) { // 顶点索引无效
-        std::ostringstream s;
-        s << "Invalid vertex index! (" << v << ")";
-        throw illegalParameterValue(s.str());
+        return false;
     }
 
     return true;
