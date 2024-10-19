@@ -1,11 +1,14 @@
-#ifndef COMMON_CPP
-#define COMMON_CPP
+﻿#pragma once
 
-// 抽象类线性表的定义
+
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+#include <chrono>
+#include <thread>  // 用于 sleep_for
+#include <windows.h>  // 用于设置控制台窗口
 #include "Exception.cpp"
+using std::min;
 
 
 // 改变一个一维数组的长度
@@ -15,12 +18,12 @@ void changeLength1D(T* & a, int oldLength, int newLength) {
         throw illegalParameterValue("new length must be >= 0");
     }
 
-    T* temp = new T[newLength]; // 新数组
-    int number = std::min(oldLength, newLength); // 需要复制的元素个数
+    T* temp = new T [newLength]; // 新数组
+    int number = min(oldLength, newLength); // 需要复制的元素个数
     std::copy(a, a+number, temp); // 将从a 到 a+number之间的数据复制到新数组
     delete [] a; // 释放老数组的内存空间
     a = temp;
-};
+}
 
 //--------------------------------线性表基类---------------------------------
 
@@ -59,7 +62,6 @@ class arrayList : public linearList<T> {
         int indexOf(const T& theElement) const;
         void erase(int theIndex);
         void insert(int theIndex, const T& theElement);
-        void output(std::ostream& out) const;
 
         // 其他方法
         int capacity() const {return arrayLength;}
@@ -269,4 +271,42 @@ void arrayQueue<T>::enqueue(const T& theElement) {
     return;
 }
 
-#endif
+//--------------------------------线性队列类---------------------------------
+
+//---------------------------------- 其他 ----------------------------------
+// 更新进度条函数
+static void updateProgressBar(int progress, int total) {
+    int barWidth = 50;  // 进度条长度
+    float percent = (float)progress / total;
+
+    // 使用 \r 回到行首，避免换行
+    std::cout << "\r[";
+    int pos = barWidth * percent;  // 当前进度对应的 # 数量
+
+    // 打印进度条内容
+    for (int i = 0; i < barWidth; ++i) {
+        if (i < pos)
+            std::cout << "#";
+        else
+            std::cout << " ";
+    }
+
+    std::cout << "] " << int(percent * 100) << "%";  // 显示百分比
+
+    std::cout.flush();  // 强制刷新输出
+}
+
+// 进度条函数
+static void ProgressBar() {
+    int total = 100;
+
+    // 模拟任务进度
+    for (int i = 0; i <= total; ++i) {
+        updateProgressBar(i, total);
+        std::this_thread::sleep_for(std::chrono::milliseconds(25));  // 延时50ms
+    }
+
+    std::cout << std::endl;
+}
+
+

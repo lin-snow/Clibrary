@@ -1,9 +1,10 @@
-#ifndef GRAPH_CPP
-#define GRAPH_CPP
+﻿#pragma once
 
 /* 有向加权图实现 */
 #include <iostream>
 #include <string>
+#include <iomanip>
+#include <cfloat>
 #include "Graph.hpp"
 #include "Common.cpp"
 
@@ -34,7 +35,7 @@ WDGraph<DataType, WeightType>::~WDGraph() {
 
 // 是否存在顶点
 template <typename DataType, typename WeightType>
-bool WDGraph<DataType, WeightType>::existsVertex(int v) {
+bool WDGraph<DataType, WeightType>::existsVertex(int v) const {
     if (v < 0 || v >= n) { // 顶点索引无效
         std::ostringstream s;
         s << "Invalid vertex index! (" << v << ")";
@@ -75,16 +76,20 @@ void WDGraph<DataType, WeightType>::eraseVertex(int v) {
 
     // 交换顶点
     vertex<DataType>* temp = vertexList->get(n-1); // 最后一个顶点
-    vertexList->get(v)->ID = temp->ID; // 交换ID
-    vertexList->get(v)->data = temp->data; // 交换数据
     
-    // 删除最后一个顶点
-    vertexList->erase(n-1);
-
-    // 顶点数量减1
-    n--;
+    // vertexList->get(v)->ID = temp->ID; // 交换ID
+    vertexList->get(v)->data = temp->data; // 交换数据
 
     // 更新边列表
+    // 把原先与顶点v相关的边删除
+    for (int i = 0; i < e; i++) {
+        if ((edgeList->get(i))->fromID == v || (edgeList->get(i))->toID == v) {
+            edgeList->erase(i);
+            e--;
+        }
+    }
+
+    // 把原先与最后一个顶点相关的边更新为顶点v
     for (int i = 0; i < e; i++) {
         if ((edgeList->get(i))->fromID == n-1) {
             (edgeList->get(i))->fromID = v;
@@ -95,14 +100,11 @@ void WDGraph<DataType, WeightType>::eraseVertex(int v) {
         }
     }
 
-    // 更新邻接矩阵
-    if (a != nullptr) {
-        // 删除原来的邻接矩阵
-        deleteAdjacencyMatrix();
+    // 删除最后一个顶点
+    vertexList->erase(n-1);
 
-        // 生成新的邻接矩阵
-        genAdjacencyMatrix();
-    }
+    // 顶点数量减1
+    n--;
 
     return;
 }
@@ -203,7 +205,11 @@ void WDGraph<DataType, WeightType>::eraseEdge(int v1, int v2) {
 // 返回顶点的入度
 template <typename DataType, typename WeightType>
 int WDGraph<DataType, WeightType>::inDegree(int v) const {
-    checkVertexIndex(v, v); // 检查顶点的索引是否合法
+    if (!existsVertex(v)) { // 检查顶点是否存在
+        std::ostringstream s;
+        s << "Vertex " << v << " does not exist!";
+        throw illegalParameterValue(s.str());
+    }
 
     int degree = 0;
 
@@ -216,10 +222,14 @@ int WDGraph<DataType, WeightType>::inDegree(int v) const {
     return degree;
 }
 
-// 返回顶点的入度
+// 返回顶点的出度
 template <typename DataType, typename WeightType>
 int WDGraph<DataType, WeightType>::outDegree(int v) const {
-    checkVertexIndex(v, v); // 检查顶点的索引是否合法
+    if (!existsVertex(v)) { // 检查顶点是否存在
+        std::ostringstream s;
+        s << "Vertex " << v << " does not exist!";
+        throw illegalParameterValue(s.str());
+    }
 
     int degree = 0;
 
@@ -235,7 +245,11 @@ int WDGraph<DataType, WeightType>::outDegree(int v) const {
 // 返回顶点的度
 template <typename DataType, typename WeightType>
 int WDGraph<DataType, WeightType>::degree(int v) const {
-    checkVertexIndex(v, v); // 检查顶点的索引是否合法
+    if (!existsVertex(v)) { // 检查顶点是否存在
+        std::ostringstream s;
+        s << "Vertex " << v << " does not exist!";
+        throw illegalParameterValue(s.str());
+    }
 
     int degree = 0;
     int inD = inDegree(v);
@@ -257,6 +271,30 @@ void WDGraph<DataType, WeightType>::checkVertexIndex(int v1, int v2) const {
         s << "Invalid vertex index! (" << v1 << ", " << v2 << ")";
         throw illegalParameterValue(s.str()); // 顶点索引无效
     }
+}
+
+// 返回顶点的数据
+template <typename DataType, typename WeightType>
+DataType WDGraph<DataType, WeightType>::getVertex(int v) const {
+    if (!existsVertex(v)) { // 检查顶点是否存在
+        std::ostringstream s;
+        s << "Vertex " << v << " does not exist!";
+        throw illegalParameterValue(s.str());
+    }
+
+    return vertexList->get(v)->data;
+}
+
+// 设置顶点的数据
+template <typename DataType, typename WeightType>
+void WDGraph<DataType, WeightType>::setVertex(int v, DataType theData) {
+    if (!existsVertex(v)) { // 检查顶点是否存在
+        std::ostringstream s;
+        s << "Vertex " << v << " does not exist!";
+        throw illegalParameterValue(s.str());
+    }
+
+    vertexList->get(v)->data = theData;
 }
 
 // 返回边的权重
@@ -292,29 +330,33 @@ void WDGraph<DataType, WeightType>::setWeight(int v1, int v2, WeightType theWeig
 // 打印图
 template <typename DataType, typename WeightType>
 void WDGraph<DataType, WeightType>::printGraph() {
-    std::cout << "Graph: " << std::endl;
-    std::cout << "IsDirected: " << directed() << std::endl;
-    std::cout << "IsWeighted: " << weighted() << std::endl;
-    std::cout << "Number of vertices: " << numberOfVertices() << std::endl;
-    std::cout << "Number of edges: " << numberOfEdges() << std::endl;
+    // 输出图的基本信息
+    std::cout << " 图的基本信息如下: " << std::endl;
+    std::cout << " 图的类型为: " << (directed() ? "有向图" : "无向图") << "," << (weighted() ? "加权图" : "无权图")  << std::endl;
+    std::cout << " 顶点的数量为: " << numberOfVertices() << std::endl;
+    std::cout << " 边的数量为: " << numberOfEdges() << std::endl;
+    std::cout << " 无边的标志为: " << noEdge; if (noEdge == -DBL_MAX) { std::cout << " (即为负无穷) " << std::endl; } else { std::cout << std::endl; }
 
-    std::cout << "Vertices's ID from 0 to " << numberOfVertices() - 1 << std::endl;
-
-    // 输出顶点
-    for (int i = 0; i < n; i++) {
-        std::cout << "Vertex " << i << ": " << vertexList->get(i)->data << std::endl;
-    }
-
-    // 输出边
-    std::cout << "Edges: " << std::endl;
-    for (int i = 0; i < e; i++) {
-        std::cout << "Edge " << i << ": " << edgeList->get(i)->fromID << " -> " << edgeList->get(i)->toID << " weight: " << edgeList->get(i)->weight << std::endl;
+    // 输出顶点的信息
+    std::cout << " 顶点的信息如下: " << std::endl;
+    for (int i = 0; i < numberOfVertices(); i++) {
+        std::cout << " Vertex " << i << ": " << " ID: " << vertexList->get(i)->ID << " Data: " << vertexList->get(i)->data << std::endl;
     }
 
     return; 
 }
 
 //----------------------------------其他方法--------------------------------------
+
+//-------------------------------------边列表存储结构--------------------------------------
+// 打印边列表
+template <typename DataType, typename WeightType>
+void WDGraph<DataType, WeightType>::printEdgeList() const {
+    std::cout << "当前的边列表为: " << std::endl;
+    for (int i = 0; i < e; i++) {
+        std::cout << "Edge " << i << ": " << edgeList->get(i)->fromID << " -> " << edgeList->get(i)->toID << " weight: " << edgeList->get(i)->weight << std::endl;
+    }
+}
 
 //-------------------------------------邻接矩阵存储结构--------------------------------------
 
@@ -326,7 +368,7 @@ void WDGraph<DataType, WeightType>::genAdjacencyMatrix() {
 
     // 创建二维数组
     for (int i = 0; i < n; i++) {
-        a[i] = new WeightType[n]; // 
+        a[i] = new WeightType[n]; 
     }
 
     // 初始化邻接矩阵
@@ -377,10 +419,28 @@ void WDGraph<DataType, WeightType>::printAdjacencyMatrix() const{
         return;
     }
 
-    std::cout << "Adjacency matrix: " << std::endl;
+    // 计算每列的最大宽度
+    int* width = new int[n];
+    for (int i = 0; i < n; i++) {
+        width[i] = 0;
+    }
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            std::cout << a[i][j] << " ";
+            int w = 0;
+            w = std::to_string(a[i][j]).size();
+            if (w > width[j]) {
+                width[j] = w;
+            }
+        }
+    }
+
+    // 打印邻接矩阵
+    std::cout << "Adjacency matrix: " << std::endl;
+    std::cout << std::endl;
+    for (int i = 0; i < n; i++) {
+        std::cout << i << " : ";
+        for (int j = 0; j < n; j++) {
+            std::cout << std::left << " | " << std::setw(width[j]) << a[i][j] << " | ";
         }
         std::cout << std::endl;
     }
@@ -453,7 +513,8 @@ void WDGraph<DataType, WeightType>::BFS(int v, int reach[], int label) {
         int w = q.front(); // 取出队列元素
         q.dequeue(); // 出队
 
-        
+        // 当前正在访问
+        std::cout << "访问顶点:  " << w << std::endl;
 
         // 标记所有未访问的邻接于顶点w的顶点
         myIterator<DataType, WeightType>* iw  = iterator(w); // 获取顶点w的迭代器
@@ -491,6 +552,9 @@ void WDGraph<DataType, WeightType>::DFS(int v, int reach[], int label) {
         reach[i] = 0; // 把没有访问过的顶点标记为0
     }
 
+    // 访问顶点v
+    std::cout << "访问顶点: " << v << std::endl;
+
     // 递归深度优先搜索
     rDFS(v, reach, label);
 }
@@ -504,7 +568,7 @@ void WDGraph<DataType, WeightType>::rDFS(int v, int reach[], int label) {
     WeightType weight;
     while ((u = iv->next(weight)) != -1) // 访问与v相邻的顶点
         if (reach[u] == 0) { // 顶点u未访问
-            std::cout << "Visit vertex " << u << std::endl;
+            std::cout << "访问顶点: " << u << std::endl;
             rDFS(u, reach, label); // 递归访问顶点u
         }
 
@@ -768,6 +832,5 @@ void WDGraph<DataType, WeightType>::printCrossList() const {
 }
 //----------------------------十字链表存储结构-----------------------------
 
-#endif
 
 

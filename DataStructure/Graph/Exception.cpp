@@ -1,5 +1,4 @@
-#ifndef EXCEPTION_CPP
-#define EXCEPTION_CPP
+﻿#pragma once
 
 #include <iostream>
 #include <string>
@@ -19,5 +18,3 @@ class illegalParameterValue {
     private:
         std::string message;
 };
-
-#endif

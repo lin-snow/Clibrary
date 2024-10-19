@@ -1,0 +1,1 @@
+g++ Test.cpp -o main.exe -static-libstdc++

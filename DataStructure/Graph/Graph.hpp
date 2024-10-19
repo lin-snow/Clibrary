@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Common.cpp" 
 
@@ -89,7 +89,7 @@ class graph {
 
         virtual int numberOfVertices() const = 0; // 返回顶点的数量
         virtual int numberOfEdges() const = 0; // 返回边的数量
-        virtual bool existsVertex(int) = 0; // 当且仅当顶点v在图中时，返回值是true
+        virtual bool existsVertex(int) const = 0; // 当且仅当顶点v在图中时，返回值是true
         virtual void insertVertex(DataType) = 0; // 添加一个节点 
         virtual bool existsEdge(int, int) const = 0; // 当且仅当边(v1, v2)在图中时，返回值是true
         virtual void insertEdge(edge<WeightType>*) = 0; // 插入一条边
@@ -125,7 +125,7 @@ class WDGraph : public graph<DataType, WeightType> {
         int numberOfEdges() const; // 返回边的数量
         bool directed() const; // 当且仅当是有向图时，返回值是true
         bool weighted() const; // 当且仅当是加权图时，返回值是true
-        bool existsVertex(int v); // 当且仅当顶点v在图中时，返回值是true
+        bool existsVertex(int v) const; // 当且仅当顶点v在图中时，返回值是true
         void insertVertex(DataType theData); // 添加一个节点
         void eraseVertex(int v); // 删除一个节点
         bool existsEdge(int v1, int v2) const; // 当且仅当边(v1, v2)在图中时，返回值是true
@@ -138,8 +138,13 @@ class WDGraph : public graph<DataType, WeightType> {
         // 其他方法
         void printGraph(); // 打印图
         void checkVertexIndex(int v1, int v2) const; // 检查顶点的索引是否合法
+        DataType getVertex(int v) const; // 返回顶点的数据
+        void setVertex(int v, DataType theData); // 设置顶点的数据
         WeightType getWeight(int v1, int v2) const; // 返回边的权重
         void setWeight(int v1, int v2, WeightType theWeight); // 设置边的权重
+
+        // 边列表存储结构
+        void printEdgeList() const; // 打印边列表
 
         // 邻接矩阵存储结构
         void genAdjacencyMatrix(); // 生成邻接矩阵
