@@ -32,6 +32,11 @@ int main() {
     std::cout << "                                 <- 添加必要的顶点  ->                                " << std::endl;
     g.insertVertex("A"); g.insertVertex("B"); g.insertVertex("C"); g.insertVertex("D"); g.insertVertex("E"); g.insertVertex("F");
     std::cout << " 顶点 A, B, C, D, E, F 已经添加到图中 " << std::endl;
+    // 添加自定义顶点
+    std::string myVertex;
+    std::cout << " 请输入自定义顶点的数据: "; std::cin >> myVertex;
+    g.insertVertex(myVertex);
+    std::cout << " 顶点 " << myVertex << " 已经添加到图中 " << std::endl;
     std::cout << " 顶点的数量为: " << g.numberOfVertices() << std::endl;
     std::cout << " -----------------------------------------------------------------------------------" << std::endl << std::endl;
 
@@ -46,7 +51,14 @@ int main() {
     edge<float>* e7 = new edge<float>(4, 5, 7.0); g.insertEdge(e7); // E -> F
     edge<float>* e8 = new edge<float>(5, 0, 8.0); g.insertEdge(e8); // F -> A
     edge<float>* e9 = new edge<float>(5, 1, 9.0); g.insertEdge(e9); // F -> B
-    std::cout << " 边 A -> B, A -> C, B -> C, B -> D, C -> D, D -> E, E -> F, F -> A 已经添加到图中 " << std::endl;
+    std::cout << " 边 A -> B, A -> C, B -> C, B -> D, C -> D, D -> E, E -> F, F -> A, F -> B 已经添加到图中 " << std::endl;
+    // 添加自定义边
+    int from, to; float weight;
+    std::cout << " 请输入自定义边的起点ID: "; std::cin >> from;
+    std::cout << " 请输入自定义边的终点ID: "; std::cin >> to;
+    std::cout << " 请输入自定义边的权重: "; std::cin >> weight;
+    edge<float>* myEdge = new edge<float>(from, to, weight);
+    g.insertEdge(myEdge);
     std::cout << " 边的数量为: " << g.numberOfEdges() << std::endl;
     std::cout << " -----------------------------------------------------------------------------------" << std::endl << std::endl;
 

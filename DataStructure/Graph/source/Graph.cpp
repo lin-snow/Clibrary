@@ -152,7 +152,8 @@ void WDGraph<DataType, WeightType>::insertEdge(edge<WeightType>* theEdge) {
 
     // 检查边是否存在
     if (existsEdge(v1, v2)) {
-        std::cout << "Edge (" << v1 << ", " << v2 << ")" << " already exists!" << std::endl;
+        std::cout << " 边 (" << v1 << ", " << v2 << ")" << " 已经存在了!" << std::endl;
+        return;
     }
 
     // 插入边
@@ -162,7 +163,7 @@ void WDGraph<DataType, WeightType>::insertEdge(edge<WeightType>* theEdge) {
     // 更新邻接矩阵
     if (a != nullptr)
         a[v1][v2] = theEdge->weight;
-
+    std::cout << " 边 " << theEdge->fromID << " -> " << theEdge->toID << ": (" << theEdge->weight << ")" << " 已经添加到图中 " << std::endl;
     return;
 }
 
