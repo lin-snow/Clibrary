@@ -64,7 +64,7 @@ template <typename WeightType>
 class ArcBox {
     public:
         ArcBox(int theTailVex, int theHeadVex, WeightType theWeight)
-            : tailVex(theTailVex), headVex(theHeadVex), headLink(nullptr), tailLink(nullptr), weight(theWeight), {}; // 构造函数
+            : tailVex(theTailVex), headVex(theHeadVex), headLink(nullptr), tailLink(nullptr), weight(theWeight) {}; // 构造函数
         int tailVex, headVex; // 弧尾和弧头对应的顶点的位置
         ArcBox<WeightType>* headLink, *tailLink; // 分别指向弧头相同和弧尾相同的下一条弧
         WeightType weight; // 边的权重

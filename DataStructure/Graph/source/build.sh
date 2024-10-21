@@ -1,4 +1,4 @@
-g++ Test.cpp -o main.exe -static-libstdc++ -std=c++17
+g++ Test.cpp -o main.exe -static -static-libgcc -static-libstdc++ -std=c++17
 
 cp main.exe ../release/main.exe
 
