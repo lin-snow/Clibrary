@@ -1,5 +1,4 @@
-﻿#pragma once
-
+#pragma once
 
 #include <iostream>
 #include <sstream>
@@ -7,9 +6,27 @@
 #include <chrono>
 #include <thread>  // 用于 sleep_for
 #include <windows.h>  // 用于设置控制台窗口
-#include "Exception.cpp"
+#include <string>
+#include <stdexcept>
+
 using std::min;
 
+// 异常类
+class illegalParameterValue {
+    public:
+        illegalParameterValue(): // 默认构造函数
+            message("Illegal parameter value") {}
+        illegalParameterValue(const std::string & theMessage)
+            : message(theMessage) {} // 带参数的构造函数
+
+        void outputMessage() { 
+            std::cout << message << std::endl;
+        }
+    private:
+        std::string message;
+};
+
+//---------------------------------------------------------------------------
 
 // 改变一个一维数组的长度
 template <class T>
@@ -308,5 +325,7 @@ static void ProgressBar() {
 
     std::cout << std::endl;
 }
+
+//---------------------------------- 其他 ----------------------------------
 
 
