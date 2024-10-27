@@ -22,7 +22,8 @@ void addVertex(WDGraph<std::string, float>& graph) {
 void addEdge(WDGraph<std::string, float>& graph) {
     system("cls"); // 清屏
     std::cout << "                                 <- 向图中添加自定义边  ->                                " << std::endl;
-    int from, to, weight;
+    int from, to;
+    float weight;
     std::cout << " 请输入边的起点ID: "; std::cin >> from;
     std::cout << " 请输入边的终点ID: "; std::cin >> to;
     std::cout << " 请输入边的权重: "; std::cin >> weight;
@@ -37,6 +38,9 @@ void deleteVertex(WDGraph<std::string, float>& graph) {
     int v;
     std::cout << " 请输入要删除的顶点ID: "; std::cin >> v;
     graph.eraseVertex(v);
+
+    std::cout << "按回车继续..." << std::endl;
+    getchar();
 }
 
 // 删除边
@@ -47,6 +51,9 @@ void deleteEdge(WDGraph<std::string, float>& graph) {
     std::cout << " 请输入要删除的边的起点ID: "; std::cin >> v1;
     std::cout << " 请输入要删除的边的终点ID: "; std::cin >> v2;
     graph.eraseEdge(v1, v2);
+
+    std::cout << "按回车继续..." << std::endl;
+    getchar();
 }
 
 // 更新顶点
@@ -57,6 +64,9 @@ void updateVertex(WDGraph<std::string, float>& graph) {
     std::cout << " 请输入要更新的顶点ID: "; std::cin >> v;
     std::cout << " 请输入新的数据: "; std::cin >> data;
     graph.updateVertex(v, data);
+
+    std::cout << "按回车继续..." << std::endl;
+    getchar();
 }
 
 // 更新边的权重
@@ -68,6 +78,9 @@ void updateEdge(WDGraph<std::string, float>& graph) {
     std::cout << " 请输入要更新的边的终点ID: "; std::cin >> v2;
     std::cout << " 请输入新的权重: "; std::cin >> weight;
     graph.setWeight(v1, v2, weight);
+
+    std::cout << "按回车继续..." << std::endl;
+    getchar();
 }
 
 // 打印图
@@ -86,6 +99,9 @@ void degreeOfVertex(WDGraph<std::string, float>& graph) {
     std::cout << " 顶点 " << v << " 的出度为 " << graph.outDegree(v) << std::endl;
     std::cout << " 顶点 " << v << " 的入度为 " << graph.inDegree(v) << std::endl;
     std::cout << " 得到的顶点的度、出度和入度来自于所有存储结构计算得到，结果一致性已得到验证才会输出！ " << std::endl;
+
+    std::cout << "按回车继续..." << std::endl;
+    getchar();
 }
 
 // 广度优先搜索
@@ -158,6 +174,7 @@ void showMenu(WDGraph<std::string, float>& graph) {
 
     // 判断输入的合法性
     while (choice < 1 || choice > 13) {
+        std::cin.get(); // 清空输入缓冲区
         std::cout << " 请输入正确的选项 (1 - 13): ";
         std::cin >> choice;
     }
@@ -216,8 +233,12 @@ void showMenu(WDGraph<std::string, float>& graph) {
             exit(0);
             break;
         default:
+            exit(0);
             break;
     }
+
+    std::cout << "按回车继续..." << std::endl;
+    getchar();
 
     return;
 }
