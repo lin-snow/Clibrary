@@ -12,11 +12,11 @@
 
 // 构造函数
 template <typename DataType, typename WeightType>
-WDGraph<DataType, WeightType>::WDGraph(WeightType theNoEdge) {
+WDGraph<DataType, WeightType>::WDGraph(WeightType theNoEdge, bool theDirected, bool theWeighted) {
     n = 0; // 顶点的数量
     e = 0; // 边的数量
-    isDirected = true; // 是有向图
-    isWeighted = true; // 是加权图
+    isDirected = theDirected; // 是有向图
+    isWeighted = theWeighted; // 是加权图
     noEdge = theNoEdge; // 无边的标志
     vertexList = new arrayList<vertex<DataType>*>(10); // 初始化顶点列表
     edgeList = new arrayList<edge<WeightType>*>(10); // 初始化边列表
@@ -200,7 +200,7 @@ bool WDGraph<DataType, WeightType>::existEdge(int v1, int v2) const {
     }
 
     // 邻接矩阵存储结构
-    bool exist_AM = adjacencyMatrix->existEdge(v1, v2);
+    bool exist_AM = adjacencyMatrix->existEdge(v1, v2); 
 
     // 邻接表存储结构
     bool exist_AT = adjacencyTable->existEdge(v1, v2);
@@ -222,6 +222,7 @@ template <typename DataType, typename WeightType>
 void WDGraph<DataType, WeightType>::insertEdge(edge<WeightType>* theEdge) {
     if (theEdge->fromID < 0 || theEdge->fromID >= n || theEdge->toID < 0 || theEdge->toID >= n || theEdge->fromID == theEdge->toID) {
         std::cout << "Invalid vertex index! (" << theEdge->fromID << ", " << theEdge->toID << ")" << std::endl;
+        system("pause");
         return;
     }
 
@@ -233,19 +234,38 @@ void WDGraph<DataType, WeightType>::insertEdge(edge<WeightType>* theEdge) {
 
     // 边列表存储结构
     edgeList->insert(e, theEdge); // 插入一条边
+    if (isDirected == false) {
+        edge<WeightType>* reverseEdge = new edge<WeightType>(theEdge->toID, theEdge->fromID, theEdge->weight);
+        edgeList->insert(e+1, reverseEdge); // 插入一条边
+    }
 
     // 邻接矩阵存储结构
     adjacencyMatrix->insertEdge(theEdge); // 插入一条边
+    if (isDirected == false) {
+        edge<WeightType>* reverseEdge = new edge<WeightType>(theEdge->toID, theEdge->fromID, theEdge->weight);
+        adjacencyMatrix->insertEdge(reverseEdge); // 插入一条边
+    }
 
     // 邻接表存储结构
     adjacencyTable->insertEdge(theEdge); // 插入一条边
+    if (isDirected == false) {
+        edge<WeightType>* reverseEdge = new edge<WeightType>(theEdge->toID, theEdge->fromID, theEdge->weight);
+        adjacencyTable->insertEdge(reverseEdge); // 插入一条边
+    }
 
     // 十字链表存储结构
     crossList->insertEdge(theEdge); // 插入一条边
+    if (isDirected == false) {
+        edge<WeightType>* reverseEdge = new edge<WeightType>(theEdge->toID, theEdge->fromID, theEdge->weight);
+        crossList->insertEdge(reverseEdge); // 插入一条边
+    }
 
     e++; // 边数量加一
+    if (isDirected == false) e++; // 无向图边数量加一
 
     std::cout << "边 (" << theEdge->fromID << ", " << theEdge->toID << ") 添加成功!" << std::endl;
+
+    system("pause");
 
     return;
 }
@@ -282,6 +302,8 @@ void WDGraph<DataType, WeightType>::setWeight(int v1, int v2, WeightType theWeig
     crossList->setWeight(v1, v2, theWeight);
 
     std::cout << "边 (" << v1 << ", " << v2 << ") 的权重设置成功!" << std::endl;
+
+    system("pause");
 
     return;
 }
@@ -322,6 +344,8 @@ void WDGraph<DataType, WeightType>::eraseEdge(int v1, int v2) {
 
     std::cout << "边 (" << v1 << ", " << v2 << ") 删除成功!" << std::endl;
 
+    system("pause");
+
     return;
 }
 
@@ -343,6 +367,8 @@ void WDGraph<DataType, WeightType>::printEdge(int v1, int v2) const {
 
     // 边不存在
     std::cout << "边 (" << v1 << ", " << v2 << ") 不存在!" << std::endl;
+
+    system("pause");
 }
 
 // 获取一条边
@@ -362,6 +388,8 @@ edge<WeightType>* WDGraph<DataType, WeightType>::getEdge(int v1, int v2) const {
 
     // 边不存在
     std::cout << "边 (" << v1 << ", " << v2 << ") 不存在!" << std::endl;
+    system("pause");
+
     return nullptr;
 }
 
@@ -544,12 +572,14 @@ void WDGraph<DataType, WeightType>::BFS(int v, int reach[], int label) {
     // 检查顶点索引是否有效
     if (v < 0 || v >= n) {
         std::cout << "Invalid vertex index! " << v << std::endl;
+        system("pause");
         return;
     }
 
     // 检查label是否有效
     if (label == 0) {
         std::cout << "label should not be 0 !" << label << std::endl;
+        system("pause");
         return;
     }
 
@@ -592,12 +622,14 @@ void WDGraph<DataType, WeightType>::DFS(int v, int reach[], int label) {
     // 检查顶点索引是否有效
     if (v < 0 || v >= n) {
         std::cout << "Invalid vertex index! " << v << std::endl;
+        system("pause");
         return;
     }
 
     // 检查label是否有效
     if (label == 0) {
         std::cout << "label should not be 0 !" << label << std::endl;
+        system("pause");
         return;
     }
 
@@ -695,13 +727,180 @@ void WDGraph<DataType, WeightType>::findPath(int theSource, int theDestination) 
 
 //------------------------------------------ 图类 (路径查找) -------------------------------------------
 
+//------------------------------------------ 图类 (最短路径) -------------------------------------------
+template <typename DataType, typename WeightType>
+void WDGraph<DataType, WeightType>::shortestPath(int start) {
+    // 检查起始顶点的索引是否有效
+    if (start < 0 || start >= n) {
+        std::cout << "Invalid vertex index! " << start << std::endl;
+        system("pause");
+        return;
+    }
+
+    WeightType *dist = new WeightType[n]; // 存储从起始顶点到各个顶点的最短路径长度
+    for (int i = 0; i < n; i++) dist[i] = noEdge; // 初始化为无穷大
+    dist[start] = 0; // 起点距离设置为0
+
+    // 选择想要使用的存储结构的最短路径查找
+    int choice = 0;
+    std::cout << "1. 邻接矩阵存储结构" << std::endl;
+    std::cout << "2. 邻接表存储结构" << std::endl;
+    std::cout << "3. 十字链表存储结构" << std::endl;
+    std::cout << "请选择想要使用的存储结构：" << std::endl;
+    std::cin >> choice;
+
+    switch (choice) {
+        case 1:
+            std::cout << "使用邻接矩阵存储结构：" << std::endl;
+            adjacencyMatrix->dijkstra(start, dist);
+            break;
+        case 2:
+            std::cout << "使用邻接表存储结构：" << std::endl;
+            adjacencyTable->dijkstra(start, dist);
+            break;
+        case 3:
+            std::cout << "使用十字链表存储结构：" << std::endl;
+            crossList->dijkstra(start, dist);
+            break;
+        default:
+            std::cout << "请输入正确的选项 (1 - 3)! " << choice << std::endl;
+            break;
+    }
+
+    // 打印最短路径
+    std::cout << "从顶点 " << start << "(" << vertexList->get(start)->data << ")" << " 到各个顶点的最短路径长度为：" << std::endl;
+    for (int i = 0; i < n; i++) {
+        if (i == start) continue;
+        if (dist[i] == noEdge) {
+            std::cout << "到顶点 " << i << "(" << vertexList->get(i)->data << ")" << " 不存在路径！" << std::endl;
+        } else {
+            std::cout << "到顶点 " << i << "(" << vertexList->get(i)->data << ")" << " 的最短路径长度为：" << dist[i] << std::endl;
+        }
+    }
+
+    system("pause");
+
+    return;
+}
+
+//------------------------------------------ 图类 (最短路径) -------------------------------------------
+
+//------------------------------------------ 图类 (拓补排序) -------------------------------------------
+template <typename DataType, typename WeightType>
+void WDGraph<DataType, WeightType>::topologicalSort() {
+    // 检查当前是否为有向图
+    if (directed() == false) {
+        std::cout << "当前图为无向图，拓扑排序算法只能应用于有向图！" << std::endl;
+        system("pause");
+        return;
+    }
+
+    // 选择想要使用的存储结构的拓扑排序
+    int choice = 0;
+    std::cout << "1. 邻接矩阵存储结构" << std::endl;
+    std::cout << "2. 邻接表存储结构" << std::endl;
+    std::cout << "3. 十字链表存储结构" << std::endl;
+    std::cout << "请选择想要使用的存储结构：" << std::endl;
+    std::cin >> choice;
+
+    switch (choice) {
+        case 1:
+            std::cout << "使用邻接矩阵存储结构：" << std::endl;
+            adjacencyMatrix->topologicalSort();
+            break;
+        case 2:
+            std::cout << "使用邻接表存储结构：" << std::endl;
+            adjacencyTable->topologicalSort();
+            break;
+        case 3:
+            std::cout << "使用十字链表存储结构：" << std::endl;
+            crossList->topologicalSort();
+            break;
+        default:
+            std::cout << "请输入正确的选项 (1 - 3)! " << choice << std::endl;
+            break;
+    }
+
+    std::cout << std::endl;
+    system("pause");
+
+    return;
+}
+//------------------------------------------ 图类 (拓补排序) -------------------------------------------
+
+//------------------------------------------ 图类 (最小生成树) -------------------------------------------
+// 最小生成树
+template <typename DataType, typename WeightType>
+void WDGraph<DataType, WeightType>::MST(int start) {
+    // 检查当前是否为无向图
+    if (directed() == true) {
+        std::cout << "当前图为有向图，Prim算法只能应用于无向图！" << std::endl;
+        system("pause");
+        return;
+    }
+
+    // 检查起始顶点的索引是否有效
+    if (start < 0 || start >= n) {
+        std::cout << "Invalid vertex index! " << start << std::endl;
+        return;
+    }
+
+    // 创建一个数组，存储从起始顶点到各个顶点的最小权重
+    WeightType *miniCost = new WeightType[n];
+
+    // 选择想要使用的存储结构的最小生成树
+    int choice = 0;
+    std::cout << "1. 邻接矩阵存储结构" << std::endl;
+    std::cout << "2. 邻接表存储结构" << std::endl;
+    std::cout << "3. 十字链表存储结构" << std::endl;
+    std::cout << "请选择想要使用的存储结构：" << std::endl; 
+    std::cin >> choice;
+    
+
+    switch (choice) {
+        case 1:
+            std::cout << "使用邻接矩阵存储结构：" << std::endl;
+            adjacencyMatrix->prim(start, miniCost);
+            break;
+        case 2:
+            std::cout << "使用邻接表存储结构：" << std::endl;
+            adjacencyTable->prim(start, miniCost);
+            break;
+        case 3:
+            std::cout << "使用十字链表存储结构：" << std::endl;
+            crossList->prim(start, miniCost);
+            break;
+        default:
+            std::cout << "请输入正确的选项 (1 - 3)! " << choice << std::endl;
+            break;
+    }
+
+    // 输出最小生成树
+    std::cout << "最小生成树的权重为：" << std::endl;
+    for (int i = 0; i < n; i++) {
+        if (i == start) continue;
+        if (miniCost[i] == noEdge) {
+            std::cout << "顶点 " << i << "(" << vertexList->get(i)->data << ")" << " 不存在路径！" << std::endl;
+        } else {
+            std::cout << "顶点 " << i << "(" << vertexList->get(i)->data << ")" << " 的最小权重为：" << miniCost[i] << std::endl;
+        }
+    }
+
+    system("pause");
+
+    return;
+}
+
+
+//------------------------------------------ 图类 (最小生成树) -------------------------------------------
+
 //----------------------------------------------- 其他 ------------------------------------------------
 // 打印边列表
 template <typename DataType, typename WeightType>
 void WDGraph<DataType, WeightType>::printEdges() const {
-    std::cout << "边列表：" << std::endl;
+    std::cout << "当前边列表中有： " << std::endl;
     for (int i = 0; i < e; i++) {
-        std::cout << "边 (" << edgeList->get(i)->fromID << ", " << edgeList->get(i)->toID << "): " << edgeList->get(i)->weight << std::endl;
+        std::cout << "边 (" << edgeList->get(i)->fromID << " --> " << edgeList->get(i)->toID << "): " << edgeList->get(i)->weight << std::endl;
     }
 
     return;
@@ -710,9 +909,9 @@ void WDGraph<DataType, WeightType>::printEdges() const {
 // 打印顶点列表
 template <typename DataType, typename WeightType>
 void WDGraph<DataType, WeightType>::printVertices() const {
-    std::cout << "顶点列表：" << std::endl;
+    std::cout << "当前顶点列表中有：" << std::endl;
     for (int i = 0; i < n; i++) {
-        std::cout << "顶点 " << i << ": " << vertexList->get(i)->data << std::endl;
+        std::cout << "顶点 ID " << i << ": " << vertexList->get(i)->data << std::endl;
     }
 
     return;

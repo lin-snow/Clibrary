@@ -12,11 +12,11 @@ int main() {
     SetConsoleOutputCP(65001); // 设置控制台输出为UTF-8编码 (默认g++编译时使用)
 
     // 创建一个有向加权图用于测试， 无边的标志为-DBL_MAX， 顶点数据类型为std::string， 边权重数据类型为float
-    float noEdge = -DBL_MAX; 
-    WDGraph<std::string, float> g(noEdge);
+    float noEdge = DBL_MAX; 
+    WDGraph<std::string, float> g(noEdge, true, true);
 
     // 加载测试程序
-    ProgressBar();
+    // ProgressBar();
     // 回车开始测试
     std::cout << " 请按回车键开始测试 ... " << std::endl;
     std::cin.get();
@@ -29,7 +29,7 @@ int main() {
     std::cout << " 当前图的边数量为: " << g.numberOfEdges() << std::endl;
     std::cout << " 图的类型为: " << (g.directed() ? "有向图" : "无向图") << "," << (g.weighted() ? "加权图" : "无权图")  << std::endl; 
     std::cout << " 边的权重类型为：" << " float " << std::endl;
-    std::cout << " 无边的标志为：" << noEdge << " (即为负无穷) " << std::endl << std::endl;
+    std::cout << " 无边的标志为：" << noEdge << " (即为无穷) " << std::endl << std::endl;
     std::cout << " 默认存储结构：" << " 边列表存储 " << std::endl;
     std::cout << " 支持的额外的存储结构有: " << " 邻接矩阵, 邻接表, 十字链表 " << std::endl;
     std::cout << " -----------------------------------------------------------------------------------" << std::endl << std::endl;
@@ -38,6 +38,7 @@ int main() {
     std::cout << " 请按回车键开始测试 ... " << std::endl;
     std::cin.get();
     system("cls"); // 清屏
+    
 
     while (true) {
         showMenu(g);
@@ -80,3 +81,4 @@ int main() {
 //                  别人笑我忒疯癫，我笑自己命太贱；
 //                  不见满街漂亮妹，哪个归得程序员？
 */
+

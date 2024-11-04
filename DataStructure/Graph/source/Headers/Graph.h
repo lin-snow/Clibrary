@@ -19,7 +19,7 @@ class CrossList;
 template <typename DataType, typename WeightType>
 class WDGraph {
     public:
-        WDGraph(WeightType theNoEdge); // 构造函数
+        WDGraph(WeightType theNoEdge, bool theDirected, bool theWeighted); // 构造函数
         ~WDGraph(); // 析构函数
 
         // 图本身的方法
@@ -55,6 +55,15 @@ class WDGraph {
         
         // 路径查找
         void findPath(int theSource, int theDestination); // 返回从源顶点到目标顶点的路径
+
+        // 最小路径
+        void shortestPath(int start); 
+
+        // 拓补排序
+        void topologicalSort(); // Dahn算法
+
+        // 最小生成树 
+        void MST(int start); 
 
         // 其他
         void printEdges() const; // 打印边列表
@@ -118,6 +127,15 @@ class AdjacencyMatrix {
         int* findPath(int theSource, int theDestination); // 返回从源顶点到目标顶点的路径
         bool rFindPath(int s, int reach[], int path[], int& length, int destination); // 递归查找路径
 
+        // 最短路径
+        void dijkstra(int start, WeightType* dist); // dijkstra算法
+
+        // 拓补排序
+        void topologicalSort();
+
+        // 最小生成树
+        void prim(int start, WeightType* miniCost); // prim算法
+
         // 其他
         void clear(); // 清空邻接矩阵
 
@@ -160,6 +178,15 @@ class AdjacencyTable {
         int* findPath(int theSource, int theDestination); // 返回从源顶点到目标顶点的路径
         bool rFindPath(int s, int reach[], int path[], int& length, int destination); // 递归查找路径
 
+        // 最短路径
+        void dijkstra(int start, WeightType* dist); // dijkstra算法
+
+        // 拓补排序
+        void topologicalSort();
+
+        // 最小生成树
+        void prim(int start, WeightType* miniCost); // prim算法
+
         // 其他
         void clear(); // 清空邻接表
 
@@ -200,6 +227,15 @@ class CrossList {
         // 路径查找
         int* findPath(int theSource, int theDestination); // 返回从源顶点到目标顶点的路径
         bool rFindPath(int s, int reach[], int path[], int& length, int destination); // 递归查找路径
+
+        // 最短路径
+        void dijkstra(int start, WeightType* dist); // dijkstra算法
+
+        // 拓补排序
+        void topologicalSort();
+
+        // 最小生成树
+        void prim(int start, WeightType* miniCost); // prim算法
 
         // 其他
         void clear(); // 清空十字链表

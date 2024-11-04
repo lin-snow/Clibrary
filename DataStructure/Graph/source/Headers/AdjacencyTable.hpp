@@ -8,6 +8,9 @@
 
 #include "Graph.h"
 
+#include <queue>
+#include <utility>
+
 // 插入一个顶点
 template <typename DataType, typename WeightType>
 void AdjacencyTable<DataType, WeightType>::insertVertex(vertex<DataType>* theVertex) {
@@ -410,6 +413,107 @@ bool AdjacencyTable<DataType, WeightType>::rFindPath(int s, int reach[], int pat
 
     delete is; // 删除迭代器
     return false;
+}
+
+// 最短路径 (dijkstra算法)
+template <typename DataType, typename WeightType>
+void AdjacencyTable<DataType, WeightType>::dijkstra(int start, WeightType* dist) {
+    for (int i = 0; i < g.n; i++) dist[i] = g.noEdge; // 初始化为无穷大
+    dist[start] = 0; // 起点距离设置为0
+
+    // 创建一个优先队列
+    std::priority_queue<std::pair<WeightType, int>, std::vector<std::pair<WeightType, int>>, std::greater<std::pair<WeightType, int>>> pq;
+
+    // 将起点加入到优先队列
+    pq.push(std::make_pair(dist[start], start));
+
+    // dijkstra算法
+    while (!pq.empty()) {
+        WeightType curDist = pq.top().first; // 当前距离
+        int curVertex = pq.top().second; // 当前顶点
+        pq.pop(); // 弹出队首元素
+
+        // 遍历当前定点的所有邻接顶点
+        Iterator_AT<DataType, WeightType>* iv = myIterator(curVertex);
+        int u; WeightType weight;
+        while ((u = iv->next(weight)) != -1) {
+            if (dist[u] > dist[curVertex] + weight) {
+                dist[u] = dist[curVertex] + weight;
+                pq.push(std::make_pair(dist[u], u));
+            }
+        }
+        delete iv; // 删除迭代器
+    }
+}
+
+// 拓补排序
+template <typename DataType, typename WeightType>
+void AdjacencyTable<DataType, WeightType>::topologicalSort() {
+    arrayList<int> theInDegree(g.n); // 入度数组
+    for (int i = 0; i < g.n; i++) theInDegree.insert(i, 0); // 初始化为0
+    //计算每个顶点的入度
+    for (int i = 0; i < g.n; i++)
+        theInDegree.get(i) = inDegree(i);
+
+    // 创建一个队列
+    arrayQueue<int> q(g.n);
+
+    // 将入度为0的顶点加入到队列
+    for (int i = 0; i < g.n; i++) 
+        if (theInDegree.get(i) == 0) q.enqueue(i);
+
+    // 拓补排序
+    while (!q.empty()) {
+        int v = q.front();
+        q.dequeue();
+        std::cout << v << "(" << g.vertexList->get(v)->data << ")" << " "; // 输出顶点
+
+        // 遍历邻接顶点
+        Iterator_AT<DataType, WeightType>* iv = myIterator(v);
+        int u; WeightType weight;
+        while ((u = iv->next(weight)) != -1) {
+            theInDegree.get(u)--;
+            if (theInDegree.get(u) == 0) q.enqueue(u); // 如果入度为0,加入队列
+        }
+        delete iv; // 删除迭代器
+    }
+
+    return;
+}
+
+// Prim算法
+template <typename DataType, typename WeightType>
+void AdjacencyTable<DataType, WeightType>::prim(int start, WeightType* miniCost) {
+    for (int i = 0; i < g.n; i++) miniCost[i] = g.noEdge; // 初始化为无穷大
+    miniCost[start] = 0; // 起点边权重设置为0
+    arrayList<bool> inMST(g.n);
+    for (int i = 0; i < g.n; i++) inMST.insert(i, false); // 初始化为false
+    
+    // 使用优先队列
+    std::priority_queue<std::pair<WeightType, int>, std::vector<std::pair<WeightType, int>>, std::greater<std::pair<WeightType, int>>> pq;
+    pq.push(std::make_pair(miniCost[start], start));
+
+    while(!pq.empty()) { // 队列不为空
+        int u = pq.top().second; // 当前顶点
+        pq.pop();
+
+        // 如果当前顶点已经在最小生成树中， 则跳过
+        if (inMST.get(u)) continue;
+        inMST.get(u) = true;
+
+        // 遍历当前顶点的所有邻接顶点
+        Iterator_AT<DataType, WeightType>* iv = myIterator(u);
+        int v; WeightType weight;
+        while ((v = iv->next(weight)) != -1) {
+            if (!inMST.get(v) && miniCost[v] > weight) { // 如果该边更小且邻接节点不在最小生成树中
+                miniCost[v] = weight; // 更新最小边权
+                pq.push(std::make_pair(miniCost[v], v)); // 将该边加入到优先队列
+            }
+        }
+        delete iv; // 删除迭代器
+    }
+
+    return;
 }
 
 // 清空邻接表

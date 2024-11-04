@@ -22,7 +22,7 @@ int Iterator_AM<DataType, WeightType>::next(WeightType& theWeight) {
 template <typename DataType, typename WeightType>
 int Iterator_AT<DataType, WeightType>::next(WeightType& theWeight) {
     if (row->next != nullptr) {
-        theWeight = row->next->weight;
+        theWeight = row->weight;
         row = row->next;
         // 返回row在顶点列表中的index
         return vl->indexOf(row->vertex);
@@ -35,6 +35,7 @@ int Iterator_AT<DataType, WeightType>::next(WeightType& theWeight) {
 template <typename DataType, typename WeightType>
 int Iterator_CL<DataType, WeightType>::next(WeightType& theWeight) {
     if (row != nullptr) {
+        theWeight = row->weight;
         int theNextVex = row->headVex;
         row = row->tailLink;
         return theNextVex;
