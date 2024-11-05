@@ -114,6 +114,7 @@
     "stop_token": "cpp",
     "thread": "cpp",
     "variant": "cpp",
-    "cfloat": "cpp"
+    "cfloat": "cpp",
+    "fstream": "cpp"
   }
 }

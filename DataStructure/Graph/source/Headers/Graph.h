@@ -42,6 +42,7 @@ class WDGraph {
         void setWeight(int v1, int v2, WeightType theWeight); // 改变边的权重
         void printEdge(int v1, int v2) const; // 打印一条边
         edge<WeightType>* getEdge(int v1, int v2) const; // 获取一条边
+        edge<WeightType>* getEdgeList(int i) const; // 获取边列表中的一条边
         WeightType getWeight(int v1, int v2) const; // 返回边的权重
 
         // 求度

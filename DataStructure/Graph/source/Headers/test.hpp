@@ -7,7 +7,7 @@
 #include "Common.hpp"
 #include "Graph.h"
 
-
+#include <fstream>
 
 // 添加顶点
 void addVertex(WDGraph<std::string, float>& graph) {
@@ -355,6 +355,83 @@ void about() {
     return;
 }
 
+// 把图保存到txt文件中
+void saveGraph(WDGraph<std::string, float>& graph) {
+    // 保存顶点列表
+    std::ofstream out("Data/graph_Vertex.txt");
+    if (!out) {
+        std::cerr << "无法打开文件" << std::endl;
+        exit(1);
+    }
+
+    for (int i = 0; i < graph.numberOfVertices(); i++) {
+        out << graph.getVertex(i)->data;
+        if (i != graph.numberOfVertices() - 1) {
+            out << std::endl; // 防止最后一行多一个换行符
+        }
+    }
+
+    // 保存边列表
+    std::ofstream out2("Data/graph_Edge.txt");
+    if (!out2) {
+        std::cerr << "无法打开文件" << std::endl;
+        exit(1);
+    }
+
+    for (int i = 0; i < graph.numberOfEdges(); i++) {
+        out2 << graph.getEdgeList(i)->fromID << " " << graph.getEdgeList(i)->toID << " " << graph.getEdgeList(i)->weight;
+        if (i != graph.numberOfEdges() - 1) {
+            out2 << std::endl; // 防止最后一行多一个换行符
+        }
+    }
+
+    out.close();
+    out2.close();
+
+    // 保存进度条
+    std::cout << " 保存图中 ... " << std::endl;
+    ProgressBar();
+    std::cout << " 保存完毕" << std::endl;
+    system("pause");
+
+    return;
+}
+
+// 从txt文件中读取图
+void loadGraph(WDGraph<std::string, float>& graph) {
+    // 读取顶点列表
+    std::ifstream in("Data/graph_Vertex.txt");
+    if (!in) {
+        std::cerr << "无法打开文件" << std::endl;
+        exit(1);
+    }
+
+    while (!in.eof()) {
+        std::string data;
+        in >> data;
+        graph.insertVertex(data);
+    }
+
+    // 读取边列表
+    std::ifstream in2("Data/graph_Edge.txt");
+    if (!in2) {
+        std::cerr << "无法打开文件" << std::endl;
+        exit(1);
+    }
+
+    while (!in2.eof()) {
+        int from, to;
+        float weight;
+        in2 >> from >> to >> weight;
+        graph.insertEdge(new edge<float>(from, to, weight));
+    }
+
+    in.close();
+    in2.close();
+
+    return;
+}
+
 void showMenu(WDGraph<std::string, float>& graph) {
     system("cls"); 
 
@@ -377,21 +454,22 @@ void showMenu(WDGraph<std::string, float>& graph) {
     std::cout << "  13. 拓补排序算法                                                                     " << std::endl;
     std::cout << "  14. 最小生成树算法(仅适用无向图)                                                        " << std::endl;
     std::cout << "  15. 清空图                                                                          " << std::endl;
-    std::cout << "  16. 退出                                                                             " << std::endl;
-    std::cout << "  17. 关于                                                                            " << std::endl;
+    std::cout << "  16. 保存图到文件中                                                                    " << std::endl;
+    std::cout << "  17. 退出                                                                            " << std::endl;
+    std::cout << "  18. 关于                                                                            " << std::endl;
 
     std::cout << " |----------------------------------------------------------------------------------|" << std::endl;
 
-    std::cout << " 请输入您要进行的操作 (1 - 17): ";
+    std::cout << " 请输入您要进行的操作 (1 - 18): ";
 
     int choice;
     std::cin >> choice;
 
     // 判断输入的合法性
-    while ((choice < 1 || choice > 17) || std::cin.fail()) {
+    while ((choice < 1 || choice > 18) || std::cin.fail()) {
         std::cin.clear();
         std::cin.ignore(1024, '\n');
-        std::cout << " 请输入正确的选项 (1 - 17): ";
+        std::cout << " 请输入正确的选项 (1 - 18): ";
         std::cin >> choice;
     }
 
@@ -458,9 +536,13 @@ void showMenu(WDGraph<std::string, float>& graph) {
             break;
         case 16:
             system("cls"); // 清屏
-            exit(0);
+            saveGraph(graph);
             break;
         case 17:
+            system("cls"); // 清屏
+            exit(0);
+            break;
+        case 18:
             system("cls"); // 清屏
             about();
             break;
@@ -481,10 +563,6 @@ void testGraph() {
     std::cout << "|---------------------------------- 图数据结构的测试 ( 开始 ) ---------------------------------|" << std::endl;
     // 加载测试程序
     ProgressBar();
-    // 回车开始测试
-    // std::cout << " 请按回车键开始测试 ... " << std::endl;
-    // std::cin.get();
-    // system("cls"); // 清屏
 
     // 创建一个有向加权图用于测试， 无边的标志为-DBL_MAX， 顶点数据类型为std::string， 边权重数据类型为float
     float noEdge = DBL_MAX;
@@ -522,6 +600,21 @@ void testGraph() {
     std::cout << "创建成功！" << std::endl;
     WDGraph<std::string, float> g(noEdge, theDirected, theWeighted);
 
+    // 是否需要加载已有的图
+    std::cout << " 是否需要加载已有的图: (1: 是, 0: 否): ";
+    while (true) {
+        int temp;
+        std::cin >> temp;
+        if (temp == 1) {
+            loadGraph(g);
+            break;
+        } else if (temp == 0) {
+            break;
+        } else {
+            std::cout << " 请输入正确的选项 (1 or 0): ";
+        }
+    }
+
     std::cout << "                             <- 用于测试的图的初始信息为  ->                          " << std::endl;
     std::cout << " 当前图的顶点数量为: " << g.numberOfVertices() << std::endl;
     std::cout << " 当前图的边数量为: " << g.numberOfEdges() << std::endl;
@@ -543,6 +636,8 @@ void testGraph() {
         showMenu(g);
     }
 }
+
+
 
 
 // --------------------------------------- 测试实现 ---------------------------------------

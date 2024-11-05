@@ -393,6 +393,17 @@ edge<WeightType>* WDGraph<DataType, WeightType>::getEdge(int v1, int v2) const {
     return nullptr;
 }
 
+// 获取边列表中的一条边
+template <typename DataType, typename WeightType>
+edge<WeightType>* WDGraph<DataType, WeightType>::getEdgeList(int i) const {
+    if (i < 0 || i >= e) {
+        std::cout << "Invalid edge index! " << i << std::endl;
+        return nullptr;
+    }
+
+    return edgeList->get(i);
+}
+
 // 返回边的权重
 template <typename DataType, typename WeightType>
 WeightType WDGraph<DataType, WeightType>::getWeight(int v1, int v2) const {
