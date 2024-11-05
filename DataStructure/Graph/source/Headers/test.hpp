@@ -13,10 +13,6 @@
 void addVertex(WDGraph<std::string, float>& graph) {
     system("cls"); // 清屏
     std::cout << "                                 <- 向图中添加自定义顶点  ->                                " << std::endl;
-    // graph.insertVertex("A"); graph.insertVertex("B"); graph.insertVertex("C"); graph.insertVertex("D"); graph.insertVertex("E");
-    // graph.insertEdge(new edge<float>(1,0,3));graph.insertEdge(new edge<float>(0,4,10));graph.insertEdge(new edge<float>(3,4,9));
-    // graph.insertEdge(new edge<float>(0,3,8));graph.insertEdge(new edge<float>(1,3,6));graph.insertEdge(new edge<float>(1,2,15));graph.insertEdge(new edge<float>(2,4,12));
-
     if (graph.numberOfVertices() != 0) {
         graph.printVertices();
     }
@@ -438,16 +434,15 @@ void showMenu(WDGraph<std::string, float>& graph) {
     std::cout << " |----------------------------------------------------------------------------------|" << std::endl;
     std::cout << " |                    Hello, Welcome to the Graph Data Structure Test!              |" << std::endl;
     std::cout << " |----------------------------------------------------------------------------------|" << std::endl;
-
-    std::cout << "  1.  添加顶点                                                                         "  << std::endl;
-    std::cout << "  2.  添加边                                                                           "  << std::endl;
-    std::cout << "  3.  删除顶点                                                                         " << std::endl;
-    std::cout << "  4.  删除边                                                                           " << std::endl;
-    std::cout << "  5.  更新顶点                                                                         " << std::endl;
-    std::cout << "  6.  更新边的权重                                                                      " << std::endl;
-    std::cout << "  7.  打印图                                                                           " << std::endl;
-    std::cout << "  8.  求顶点的度                                                                        " << std::endl;
-    std::cout << "  9.  广度优先搜索                                                                      " << std::endl;
+    std::cout << "  1.  添加顶点                                                                        "  << std::endl;
+    std::cout << "  2.  添加边                                                                          "  << std::endl;
+    std::cout << "  3.  删除顶点                                                                        " << std::endl;
+    std::cout << "  4.  删除边                                                                          " << std::endl;
+    std::cout << "  5.  更新顶点                                                                        " << std::endl;
+    std::cout << "  6.  更新边的权重                                                                     " << std::endl;
+    std::cout << "  7.  打印图                                                                          " << std::endl;
+    std::cout << "  8.  求顶点的度                                                                       " << std::endl;
+    std::cout << "  9.  广度优先搜索                                                                     " << std::endl;
     std::cout << "  10. 深度优先搜索                                                                     " << std::endl;
     std::cout << "  11. 查找路径                                                                        " << std::endl;
     std::cout << "  12. 最短路径算法                                                                     " << std::endl;
@@ -457,7 +452,6 @@ void showMenu(WDGraph<std::string, float>& graph) {
     std::cout << "  16. 保存图到文件中                                                                    " << std::endl;
     std::cout << "  17. 退出                                                                            " << std::endl;
     std::cout << "  18. 关于                                                                            " << std::endl;
-
     std::cout << " |----------------------------------------------------------------------------------|" << std::endl;
 
     std::cout << " 请输入您要进行的操作 (1 - 18): ";
