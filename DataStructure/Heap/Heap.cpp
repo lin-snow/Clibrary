@@ -67,7 +67,7 @@ Status InsertHeap(Heap &H, RcdType e) {
     if (H.n >= H.size-1) return ERROR; // 堆已满，插入失败
     curr = ++H.n; H.rcd[curr] = e; // 将插入元素加到堆尾
     while (curr != 1 && H.prior(H.rcd[curr], H.rcd[curr/2])) { // 非根且大于父节点
-        swapHeapElem(curr, curr/2);
+        swapHeapElem(H, curr, curr/2);
         curr /= 2;
     }
 
