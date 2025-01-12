@@ -115,6 +115,7 @@
     "thread": "cpp",
     "variant": "cpp",
     "cfloat": "cpp",
-    "fstream": "cpp"
+    "fstream": "cpp",
+    "text_encoding": "cpp"
   }
 }
